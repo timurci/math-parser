@@ -40,7 +40,7 @@ std::queue<std::string> parserObj::toShun(std::string input){
             }
         }
         //check if is an operator
-        else if(std::find(operatorList.begin(),operatorList.end(), input[i]) != operatorList.end()){
+        else if(isOperator(input[i])){
 
             //push buffer
             if(strBuffer.length()!=0){
@@ -76,7 +76,7 @@ std::queue<std::string> parserObj::toShun(std::string input){
                     std::exit(1);
                 }
 
-            if(isFunction(operators.back())){
+            if(operators.size() !=0 && isFunction(operators.back())){
                 output.push(operators.back());
                 operators.pop_back();
             }
@@ -84,9 +84,20 @@ std::queue<std::string> parserObj::toShun(std::string input){
         
         else{
             if(strBuffer.length()!=0 && (isdigit(strBuffer[0]) || strBuffer[0] == '.') ){
+                if(input[i] == '.'){
+                    strBuffer+=input[i];
+                }
+                else{
+                    output.push(strBuffer);
+                    strBuffer = input[i];
+                }
+            }
+
+            else if(isFunction(strBuffer)){
                 output.push(strBuffer);
                 strBuffer = input[i];
             }
+
             else{
                 strBuffer+=input[i];
             }
@@ -130,15 +141,15 @@ float parserObj::readShun(std::queue <std::string> outputList){
     std::vector <float> varStack;
     while(outputList.size()>0){
         //if token is an operator
-        if(std::find(operatorList.begin(),operatorList.end(), outputList.front()[0]) != operatorList.end()){
+        if(isOperator(outputList.front()[0])){
             execOperation(&varStack,outputList.front());
         }
 
-        else if(std::find(operationFunctions.begin(),operationFunctions.end(), outputList.front()) != operationFunctions.end()){
+        else if(isFunction(outputList.front())){
             //execute function
         }
 
-        else if(std::find(definedVars.begin(),definedVars.end(),outputList.front()) != definedVars.end()){
+        else if(isDefined(outputList.front())){
             //replace var
         }
 
@@ -214,6 +225,24 @@ unsigned short retPrecedence(char operatorToken){
         return 1;
     default:
         return 1000;
+    }
+}
+
+bool isOperator(char buffer){
+    if(std::find(operatorList.begin(),operatorList.end(), buffer) != operatorList.end()){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool isDefined(std::string buffer){
+    if(std::find(definedVars.begin(),definedVars.end(), buffer) != definedVars.end()){
+        return true;
+    }
+    else{
+        return false;
     }
 }
 
