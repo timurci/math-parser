@@ -6,9 +6,19 @@ int main(){
     parserObj calc;
     std::string input;
 
-    while((std::cin >> input) && (input != " ")){
+    while((std::cin >> input) && (input != "exit")){
+
+        if(input == "deg"){
+            isRadian = false;
+        }
+        else if(input == "rad"){
+            isRadian = true;
+        }
+        else{
         std::cout << calc.runParse(input) << std::endl;
-        std::cout << calc.calct(input) << "\n=======\n";
+        std::cout << calc.calct(input);
+        }
+        std::cout << "\n=======\n";
     }
 
     // ==== EXAMPLES ===
