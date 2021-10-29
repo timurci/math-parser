@@ -26,7 +26,7 @@ std::queue<std::string> parserObj::toShun(std::string input){
                 strBuffer+=input[i];                
             }
             //check if buffer is number
-            else if(isdigit(strBuffer[0]) || strBuffer[0]=='.'){
+            else if(isdigit(strBuffer[0]) || strBuffer[0]=='.' || strBuffer[0]=='+' || strBuffer[0]=='-'){
                 strBuffer+=input[i];
             }
             //if buffer not empty and not number
@@ -43,8 +43,12 @@ std::queue<std::string> parserObj::toShun(std::string input){
         //check if is an operator
         else if(isOperator(input[i])){
 
+            if(strBuffer.length() == 0 && (input[i]=='+' || input[i]=='-')){
+                strBuffer += input[i];
+                continue;
+            }
             //push buffer
-            if(strBuffer.length()!=0){
+            else{
 
                 if(isFunction(strBuffer)){
                     operators.push_back(strBuffer);
@@ -101,7 +105,7 @@ std::queue<std::string> parserObj::toShun(std::string input){
         }
         
         else{
-            if(strBuffer.length()!=0 && (isdigit(strBuffer[0]) || strBuffer[0] == '.') ){
+            if(strBuffer.length()!=0 && (isdigit(strBuffer[0]) || strBuffer[0]=='.' || strBuffer[0]=='+' || strBuffer[0]=='-') ){
                 if(input[i] == '.'){
                     strBuffer+=input[i];
                 }
@@ -164,7 +168,7 @@ float parserObj::readShun(std::queue <std::string> outputList){
     std::vector <float> varStack;
     while(outputList.size()>0){
         //if token is an operator
-        if(isOperator(outputList.front()[0])){
+        if(outputList.front().length() == 1 && isOperator(outputList.front()[0])){
             execOperation(&varStack,outputList.front());
         }
 
