@@ -24,6 +24,7 @@ extern std::vector<std::string> operationFunctions;
 extern std::vector<std::string> definedVars;
 
 unsigned short retPrecedence(char);
+std::string retVariable(std::string);
 
 bool isFunction(std::string);
 bool isDefined(std::string);

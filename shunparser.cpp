@@ -2,7 +2,7 @@
 
 std::vector<char> operatorList {'+','-','*','/','%','^'};
 std::vector<std::string> operationFunctions {"UNDEFINED"};
-std::vector<std::string> definedVars {"UNAVAILABLE"};
+std::vector<std::string> definedVars {"pi","eu"};
 
 std::string parserObj::runParse(std::string input){
     std::cout << "Result:\n";
@@ -33,8 +33,8 @@ std::queue<std::string> parserObj::toShun(std::string input){
                 if(isFunction(strBuffer)){
                     operators.push_back(strBuffer);
                 }
-                else{
-                    output.push(strBuffer);
+                else if(isDefined(strBuffer)){
+                    output.push(retVariable(strBuffer));
                 }
                 strBuffer = input[i];
             }
@@ -44,7 +44,16 @@ std::queue<std::string> parserObj::toShun(std::string input){
 
             //push buffer
             if(strBuffer.length()!=0){
-                output.push(strBuffer);
+
+                if(isFunction(strBuffer)){
+                    operators.push_back(strBuffer);
+                }
+                else if(isDefined(strBuffer)){
+                    output.push(retVariable(strBuffer));
+                }
+                else{
+                    output.push(strBuffer);
+                }
                 strBuffer = "";
             }
 
@@ -60,7 +69,15 @@ std::queue<std::string> parserObj::toShun(std::string input){
         else if(input[i] == ')'){
             while(operators.size() != 0 && operators.back()!="("){
                 if(strBuffer.length() != 0){
-                    output.push(strBuffer);
+                    if(isFunction(strBuffer)){
+                        operators.push_back(strBuffer);
+                    }
+                    else if(isDefined(strBuffer)){
+                        output.push(retVariable(strBuffer));
+                    }
+                    else{
+                        output.push(strBuffer);
+                    }
                     strBuffer = "";
                 }
 
@@ -107,7 +124,12 @@ std::queue<std::string> parserObj::toShun(std::string input){
 
     //check if strbuffer empty
     if(strBuffer.length()!=0){
-        output.push(strBuffer);
+        if(isDefined(strBuffer)){
+            output.push(retVariable(strBuffer));
+        }
+        else{
+            output.push(strBuffer);
+        }
     }
 
     //check if operator stack empty
@@ -147,10 +169,6 @@ float parserObj::readShun(std::queue <std::string> outputList){
 
         else if(isFunction(outputList.front())){
             //execute function
-        }
-
-        else if(isDefined(outputList.front())){
-            //replace var
         }
 
         else{
@@ -200,6 +218,19 @@ void execOperation(std::vector <float> *stackp, std::string optr){
         std::exit(1);
     }
 
+}
+
+std::string retVariable(std::string buffer){
+    if(buffer=="pi"){
+        return "3.14159265359";
+    }
+    else if(buffer=="eu"){
+        return "2.71828182845";
+    }
+    else{
+        std::cout << "[ERROR] Indeterminate variable has been found.\n";
+        std::exit(1);
+    }
 }
 
 unsigned short retPrecedence(char operatorToken){
