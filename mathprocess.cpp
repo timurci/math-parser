@@ -1,6 +1,6 @@
 #include "mathprocess.h"
 
-std::vector<std::string> operationFunctions {"sin","cos","tan","cot"};
+std::vector<std::string> operationFunctions {"sin","cos","tan","cot","log","ln"};
 std::vector<std::string> definedVars {"pi","eu"};
 bool isRadian = true;
 
@@ -89,5 +89,19 @@ void execFunction(std::vector <float> *stackp, std::string func){
             }
             stackp->push_back(1/(tan(sItem*3.14159265359/180)));
         }
+    }
+
+    else if (func == "log"){
+        if(initialSize > 1){
+            stackp->push_back(fItem);
+        }
+        stackp->push_back(log10(sItem));
+    }
+
+    else if (func == "ln"){
+        if(initialSize > 1){
+            stackp->push_back(fItem);
+        }
+        stackp->push_back(log(sItem));
     }
 }
