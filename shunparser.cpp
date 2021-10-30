@@ -2,22 +2,23 @@
 
 std::vector<char> operatorList {'+','-','*','/','%','^'};
 
+//returns postfix expression as string, from string input
 std::string parserObj::runParse(std::string input){
-    std::cout << "Result:\n";
-    return printShun(toShun(input));
+    return printShun(toShun(input)); 
 }
 
+//returns result as float, from string input
 float parserObj::calct(std::string input){
-    return readShun(toShun(input));
+    return readShun(toShun(input)); 
 }
 
+//returns postfix expression as queue, from string input
 std::queue<std::string> parserObj::toShun(std::string input){
-    std::string strBuffer; //add to process numbers more than one digits
+    std::string strBuffer; //this is a memory string for storing chars and digits until var/func or number is complete
     std::queue<std::string> output;
     for(unsigned short i = 0; i < input.length(); i++){
         //check if token is number
         if(isdigit(input[i])){
-            //std::cout << "isdigit: " << input[i] << std::endl; //remove
             //check if buffer empty
             if(strBuffer.length()==0){
                 strBuffer+=input[i];                
@@ -142,7 +143,6 @@ std::queue<std::string> parserObj::toShun(std::string input){
         }
         output.push(operators.back());
         operators.pop_back();
-        //std::cout << "buffer at " << "is: " << strBuffer << std::endl; //remove
 
     }
 
@@ -150,6 +150,7 @@ std::queue<std::string> parserObj::toShun(std::string input){
 
 } //shunning-yard algorithm
 
+//returns postfix expression as string, from queue input
 std::string parserObj::printShun(std::queue <std::string> outputList){
     std::string output = "";
     std::queue <std::string> bufferq = outputList; //maybe unnecessary duplication
@@ -160,9 +161,10 @@ std::string parserObj::printShun(std::queue <std::string> outputList){
     return output;
 }
 
+//returns result as float, from queue input
 float parserObj::readShun(std::queue <std::string> outputList){
     float result = 0.0;
-    std::vector <float> varStack;
+    std::vector <float> varStack; //variables are stored in this stack and finally one variable should be left here.
     while(outputList.size()>0){
         //if token is an operator
         if(outputList.front().length() == 1 && isOperator(outputList.front()[0])){
@@ -189,10 +191,10 @@ float parserObj::readShun(std::queue <std::string> outputList){
     }
 }
 
-
+//executes operation on the given variable stack and operator
 void execOperation(std::vector <float> *stackp, std::string optr){
-    float fItem = stackp->at(stackp->size() -2);
-    float sItem = stackp->at(stackp->size() -1);
+    float fItem = stackp->at(stackp->size() -2); //second last variable in variable stack
+    float sItem = stackp->at(stackp->size() -1); //last variable in variable stack
     stackp->pop_back();
     stackp->pop_back();
     switch (optr[0])
