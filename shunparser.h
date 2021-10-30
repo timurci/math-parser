@@ -3,7 +3,7 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include <math.h>
+#include "mathprocess.h"
 
 struct parserObj{
 
@@ -20,16 +20,11 @@ struct parserObj{
 };
 
 extern std::vector<char> operatorList;
-extern std::vector<std::string> operationFunctions;
-extern std::vector<std::string> definedVars;
-extern bool isRadian;
 
 unsigned short retPrecedence(char);
-std::string retVariable(std::string);
 
 bool isFunction(std::string);
 bool isDefined(std::string);
 bool isOperator(char);
 
 void execOperation(std::vector<float> *, std::string);
-void execFunction(std::vector<float> *, std::string);
