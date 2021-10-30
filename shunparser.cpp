@@ -41,7 +41,7 @@ std::queue<std::string> parserObj::toShun(std::string input){
         //check if is an operator
         else if(isOperator(input[i])){
 
-            if(strBuffer.length() == 0 && (input[i]=='+' || input[i]=='-')){
+            if(strBuffer.length() == 0 && (input[i]=='+' || input[i]=='-') && !isFunction(output.back())){
                 strBuffer += input[i];
                 continue;
             }
@@ -54,7 +54,7 @@ std::queue<std::string> parserObj::toShun(std::string input){
                 else if(isDefined(strBuffer)){
                     output.push(retVariable(strBuffer));
                 }
-                else{
+                else if(strBuffer.length()>0){
                     output.push(strBuffer);
                 }
                 strBuffer = "";
@@ -88,13 +88,14 @@ std::queue<std::string> parserObj::toShun(std::string input){
                 operators.pop_back();
 
             }
-                if(operators.size() != 0 && operators.back() == "("){
-                    operators.pop_back();
-                }
-                else{
-                    std::cout << "[ERROR] Incomplete right paranthesis at position " << (i + 1) << std::endl;
-                    std::exit(1);
-                }
+
+            if(operators.size() != 0 && operators.back() == "("){
+                operators.pop_back();
+            }
+            else{
+                std::cout << "[ERROR] Incomplete right paranthesis at position " << (i + 1) << std::endl;
+                std::exit(1);
+            }
 
             if(operators.size() !=0 && isFunction(operators.back())){
                 output.push(operators.back());
